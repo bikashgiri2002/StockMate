@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "stockmate backend for the college project",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bikashgiri2002/StockMate.git"
+  },
+  "author": "SLI",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bikashgiri2002/StockMate/issues"
+  },
+  "homepage": "https://github.com/bikashgiri2002/StockMate#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.2"
+  }
+}
