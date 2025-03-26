@@ -1,11 +1,17 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import shopRoutes from "./routes/shopRoutes.js";
+import warehouseRoutes from "./routes/warehouseRoutes.js";
+import inventoryRoutes from "./routes/inventoryRoutes.js";
 
-// Load environment variables from .env file
 dotenv.config();
-
 const app = express();
+app.use(express.json());
+
+app.use("/api/shop", shopRoutes);
+app.use("/api/warehouse", warehouseRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 
 
