@@ -32,4 +32,22 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
+// ✅ Delete a Warehouse by ID (Protected)
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const warehouse = await Warehouse.findOneAndDelete({
+      _id: req.params.id,
+      shopId: req.shop._id,
+    });
+
+    if (!warehouse) {
+      return res.status(404).json({ message: "Warehouse not found" });
+    }
+
+    res.json({ message: "Warehouse deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+});
+
 export default router;

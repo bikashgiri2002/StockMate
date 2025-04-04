@@ -93,6 +93,12 @@ const Inventory = () => {
     }
   };
 
+  // Group inventory by warehouseId
+  const groupedInventory = warehouses.map((warehouse) => ({
+    ...warehouse,
+    items: inventory.filter((item) => item.warehouseId === warehouse._id),
+  }));
+
   return (
     <div className="p-6">
       <h2 className="text-3xl font-bold mb-4">Manage Inventory</h2>
@@ -166,48 +172,60 @@ const Inventory = () => {
         </button>
       </form>
 
-      {/* Inventory List */}
-      <h3 className="text-xl font-semibold mb-3">Inventory List</h3>
-      {inventory.length === 0 ? (
-        <p>No products found.</p>
+      {/* Inventory List Grouped by Warehouse */}
+      <h3 className="text-xl font-semibold mb-3">Inventory by Warehouse</h3>
+
+      {groupedInventory.length === 0 ? (
+        <p>No warehouses found.</p>
       ) : (
-        <ul className="space-y-3">
-          {inventory.map((item) => (
-            <li
-              key={item._id}
-              className="border p-3 rounded-md flex justify-between items-center"
-            >
-              <div>
-                <strong>{item.productName}</strong> (SKU: {item.sku}) -{" "}
-                {item.quantity} pcs - ${item.price}
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  className="bg-green-500 text-white px-3 py-1 rounded-md"
-                  onClick={() =>
-                    handleUpdateQuantity(item._id, item.quantity + 1)
-                  }
-                >
-                  +1
-                </button>
-                <button
-                  className="bg-red-500 text-white px-3 py-1 rounded-md"
-                  onClick={() =>
-                    handleUpdateQuantity(item._id, item.quantity - 1)
-                  }
-                >
-                  -1
-                </button>
-                <button
-                  className="bg-gray-600 text-white px-3 py-1 rounded-md"
-                  onClick={() => handleDeleteProduct(item._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        groupedInventory.map((warehouse) => (
+          <div key={warehouse._id} className="mb-6">
+            <h4 className="text-lg font-bold mb-2">
+              {warehouse.name} ({warehouse.location})
+            </h4>
+            {warehouse.items.length === 0 ? (
+              <p className="text-gray-500">No products in this warehouse.</p>
+            ) : (
+              <ul className="space-y-2">
+                {warehouse.items.map((item) => (
+                  <li
+                    key={item._id}
+                    className="border p-3 rounded-md flex justify-between items-center"
+                  >
+                    <div>
+                      <strong>{item.productName}</strong> (SKU: {item.sku}) -{" "}
+                      {item.quantity} pcs - ${item.price}
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        className="bg-green-500 text-white px-3 py-1 rounded-md"
+                        onClick={() =>
+                          handleUpdateQuantity(item._id, item.quantity + 1)
+                        }
+                      >
+                        +1
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-3 py-1 rounded-md"
+                        onClick={() =>
+                          handleUpdateQuantity(item._id, item.quantity - 1)
+                        }
+                      >
+                        -1
+                      </button>
+                      <button
+                        className="bg-gray-600 text-white px-3 py-1 rounded-md"
+                        onClick={() => handleDeleteProduct(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
       )}
     </div>
   );

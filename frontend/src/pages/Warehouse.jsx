@@ -39,6 +39,18 @@ const Warehouse = () => {
     }
   };
 
+  const handleDeleteWarehouse = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/warehouse/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchWarehouses(); // Refresh list
+    } catch (error) {
+      console.error("Error deleting warehouse", error);
+    }
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-3xl font-bold mb-4">Manage Warehouses</h2>
@@ -84,8 +96,19 @@ const Warehouse = () => {
       ) : (
         <ul className="space-y-3">
           {warehouses.map((warehouse) => (
-            <li key={warehouse._id} className="border p-3 rounded-md">
-              <strong>{warehouse.name}</strong> - {warehouse.location} (Capacity: {warehouse.capacity})
+            <li
+              key={warehouse._id}
+              className="border p-3 rounded-md flex justify-between items-center"
+            >
+              <div>
+                <strong>{warehouse.name}</strong> - {warehouse.location} (Capacity: {warehouse.capacity})
+              </div>
+              <button
+                className="bg-red-600 text-white px-3 py-1 rounded-md"
+                onClick={() => handleDeleteWarehouse(warehouse._id)}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
