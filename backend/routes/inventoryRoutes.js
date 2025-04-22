@@ -87,6 +87,40 @@ router.put("/:id", protect, async (req, res) => {
 });
 
 /**
+ * ✅ Update Inventory Product Price (Protected)
+ */
+router.patch("/:id/price", protect, async (req, res) => {
+  try {
+    const { price } = req.body;
+
+    if (price == null || isNaN(price)) {
+      return res.status(400).json({ message: "Invalid price provided" });
+    }
+
+    const inventoryItem = await Inventory.findOne({
+      _id: req.params.id,
+      shopId: req.shop._id,
+    });
+
+    if (!inventoryItem) {
+      return res
+        .status(404)
+        .json({ message: "Product not found or unauthorized" });
+    }
+
+    inventoryItem.price = price;
+    await inventoryItem.save();
+
+    res.json({
+      message: "Product price updated successfully",
+      updatedItem: inventoryItem,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+});
+
+/**
  * ✅ Get All Inventory for a Shop (Protected)
  */
 router.get("/", protect, async (req, res) => {

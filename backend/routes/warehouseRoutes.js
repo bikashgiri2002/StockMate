@@ -50,4 +50,31 @@ router.delete("/:id", protect, async (req, res) => {
   }
 });
 
+// ✅ Update a Warehouse by ID (Protected)
+router.put("/:id", protect, async (req, res) => {
+  try {
+    const { name, location, capacity } = req.body;
+
+    // Find the warehouse by ID and ensure it belongs to the current shop
+    const warehouse = await Warehouse.findOne({
+      _id: req.params.id,
+      shopId: req.shop._id,
+    });
+
+    if (!warehouse) {
+      return res.status(404).json({ message: "Warehouse not found" });
+    }
+
+    // Update fields if they are provided
+    if (name !== undefined) warehouse.name = name;
+    if (location !== undefined) warehouse.location = location;
+    if (capacity !== undefined) warehouse.capacity = capacity;
+
+    const updatedWarehouse = await warehouse.save();
+    res.json(updatedWarehouse);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+});
+
 export default router;
